@@ -30,13 +30,13 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Alex Mercer — Creative Engineer Portfolio" },
+      { title: "Parasayte — Creative Engineer Portfolio" },
       {
         name: "description",
         content:
-          "Bilingual neo-brutalist portfolio for Alex Mercer — interactive graphics, physics-driven UI, and full-stack engineering.",
+          "Bilingual neo-brutalist portfolio for Parasayte — interactive graphics, physics-driven UI, and full-stack engineering.",
       },
-      { property: "og:title", content: "Alex Mercer — Creative Engineer" },
+      { property: "og:title", content: "Parasayte — Creative Engineer" },
       {
         property: "og:description",
         content: "Interactive physics-driven bilingual portfolio.",
@@ -72,7 +72,7 @@ function Index() {
       <header className="brutal-header">
         <div className="brutal-logo">
           <Sparkles size={18} strokeWidth={3} />
-          <span>ALEX // ملف التعريف</span>
+          <span>PARASAYTE // ملف التعريف</span>
         </div>
         <div className="lang-badge">
           <Globe size={16} strokeWidth={3} />
@@ -90,13 +90,13 @@ function Index() {
           <div className="profile-container">
             <div className="avatar-frame">
               <img
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80"
-                alt="Alex Mercer portrait"
+                src="https://images2.imgbox.com/14/5e/YYO6KGYd_o.jpg"
+                alt="Parasayte portrait"
               />
             </div>
             <div>
-              <h1 className="profile-name">Alex Mercer</h1>
-              <h2 className="profile-name-ar">أليكس ميرسر</h2>
+              <h1 className="profile-name">Parasayte</h1>
+              <h2 className="profile-name-ar">باراسايت</h2>
             </div>
           </div>
 
@@ -121,17 +121,17 @@ function Index() {
               <Mail size={18} strokeWidth={2.5} />
               <span>hougjgrxkj@gmail.com</span>
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="contact-button">
-              <Linkedin size={18} strokeWidth={2.5} />
-              <span>LinkedIn Profile</span>
+            <a href="https://instagram.com/selam9x" target="_blank" rel="noreferrer" className="contact-button">
+              <Instagram size={18} strokeWidth={2.5} />
+              <span>@selam9x</span>
             </a>
-            <a href="tel:+123456789" className="contact-button">
+            <a href="tel:+905411442870" className="contact-button">
               <Phone size={18} strokeWidth={2.5} />
-              <span>+123 456 789</span>
+              <span>+90 541 144 2870</span>
             </a>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="contact-button">
+            <a href="https://github.com/Parasayte" target="_blank" rel="noreferrer" className="contact-button">
               <Github size={18} strokeWidth={2.5} />
-              <span>GitHub Hub</span>
+              <span>Parasayte</span>
             </a>
           </div>
         </section>
@@ -206,17 +206,17 @@ function Index() {
               interactive engineering, motion design, and product systems.
             </p>
             <div className="footer-socials">
-              <a className="social-icon-btn" href="#" aria-label="Twitter">
+              <a className="social-icon-btn" href="https://twitter.com" aria-label="Twitter">
                 <Twitter size={18} strokeWidth={2.5} />
               </a>
-              <a className="social-icon-btn" href="#" aria-label="Instagram">
+              <a className="social-icon-btn" href="https://instagram.com/selam9x" aria-label="Instagram">
                 <Instagram size={18} strokeWidth={2.5} />
               </a>
-              <a className="social-icon-btn" href="#" aria-label="Dribbble">
-                <Dribbble size={18} strokeWidth={2.5} />
-              </a>
-              <a className="social-icon-btn" href="#" aria-label="GitHub">
+              <a className="social-icon-btn" href="https://github.com/Parasayte" aria-label="GitHub">
                 <Github size={18} strokeWidth={2.5} />
+              </a>
+              <a className="social-icon-btn" href="https://dribbble.com" aria-label="Dribbble">
+                <Dribbble size={18} strokeWidth={2.5} />
               </a>
             </div>
           </div>
@@ -235,13 +235,13 @@ function Index() {
             <h4>Contact</h4>
             <ul>
               <li><a href="mailto:hougjgrxkj@gmail.com"><Mail size={12} strokeWidth={3} /> hougjgrxkj@gmail.com</a></li>
-              <li><a href="tel:+123456789"><Phone size={12} strokeWidth={3} /> +123 456 789</a></li>
-              <li><a href="#"><Send size={12} strokeWidth={3} /> Newsletter</a></li>
+              <li><a href="tel:+905411442870"><Phone size={12} strokeWidth={3} /> +90 541 144 2870</a></li>
+              <li><a href="https://instagram.com/selam9x"><Instagram size={12} strokeWidth={3} /> @selam9x</a></li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2026 Alex Mercer · All rights reserved</p>
+          <p>© 2026 Parasayte · All rights reserved</p>
           <p>Built with React · Matter.js · loud typography</p>
         </div>
       </footer>
