@@ -21,6 +21,10 @@ import {
   Dribbble,
   Send,
   ChevronRight,
+  Braces,
+  Database,
+  Cloud,
+  Lock,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -113,9 +117,9 @@ function Index() {
           </div>
 
           <div className="contact-row">
-            <a href="mailto:contact@example.com" className="contact-button">
+            <a href="mailto:hougjgrxkj@gmail.com" className="contact-button">
               <Mail size={18} strokeWidth={2.5} />
-              <span>contact@example.com</span>
+              <span>hougjgrxkj@gmail.com</span>
             </a>
             <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="contact-button">
               <Linkedin size={18} strokeWidth={2.5} />
@@ -230,7 +234,7 @@ function Index() {
           <div className="footer-links-col">
             <h4>Contact</h4>
             <ul>
-              <li><a href="mailto:contact@example.com"><Mail size={12} strokeWidth={3} /> contact@example.com</a></li>
+              <li><a href="mailto:hougjgrxkj@gmail.com"><Mail size={12} strokeWidth={3} /> hougjgrxkj@gmail.com</a></li>
               <li><a href="tel:+123456789"><Phone size={12} strokeWidth={3} /> +123 456 789</a></li>
               <li><a href="#"><Send size={12} strokeWidth={3} /> Newsletter</a></li>
             </ul>
@@ -285,31 +289,78 @@ function PhysicsBanners() {
   const bannerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activated, setActivated] = useState(false);
 
-  // Banner content for the physics ribbons
+  // Banner content for the physics ribbons - now with company banners
   const ribbons = [
     {
       bg: "#ff65c3",
       color: "#000",
       angle: -1.2,
       items: ["DESIGN", "BUILD", "SHIP", "تصميم", "بناء", "إطلاق"],
+      icon: Star,
     },
     {
       bg: "#a374ff",
       color: "#fff",
       angle: 1,
       items: ["INTERACTIVE", "GRAPHICS", "MOTION", "حركة", "تفاعل", "جرافيكس"],
+      icon: Sparkles,
     },
     {
       bg: "#3eff8b",
       color: "#000",
       angle: -0.6,
       items: ["FULL · STACK", "REACT", "WEBGL", "أنظمة", "تجارب", "أداء"],
+      icon: Code2,
     },
     {
       bg: "#ffca3a",
       color: "#000",
       angle: 0.8,
       items: ["PRODUCTION", "GRADE", "ENGINEERING", "إنتاج", "هندسة", "جودة"],
+      icon: Rocket,
+    },
+    // New company/platform banners
+    {
+      bg: "#1F2937",
+      color: "#fff",
+      angle: -1.5,
+      items: ["GITHUB", "ENTERPRISE", "VERSION CONTROL", "كود", "تعاون", "إدارة"],
+      icon: Github,
+    },
+    {
+      bg: "#FF6B35",
+      color: "#fff",
+      angle: 1.2,
+      items: ["STRIPE", "PAYMENTS", "COMMERCE", "دفع", "معاملات", "تجارة"],
+      icon: Lock,
+    },
+    {
+      bg: "#4F46E5",
+      color: "#fff",
+      angle: -0.9,
+      items: ["VERCEL", "DEPLOYMENT", "EDGE NETWORK", "نشر", "سحابة", "أداء"],
+      icon: Cloud,
+    },
+    {
+      bg: "#10B981",
+      color: "#fff",
+      angle: 0.5,
+      items: ["SUPABASE", "DATABASE", "BACKEND", "بيانات", "خادم", "API"],
+      icon: Database,
+    },
+    {
+      bg: "#8B5CF6",
+      color: "#fff",
+      angle: -0.3,
+      items: ["TAILWIND CSS", "STYLING", "COMPONENTS", "تصميم", "أسلوب", "ديناميكي"],
+      icon: Braces,
+    },
+    {
+      bg: "#EC4899",
+      color: "#fff",
+      angle: 1.1,
+      items: ["NEXTJS", "FRAMEWORK", "FULLSTACK", "إطار عمل", "ريأكت", "خادم"],
+      icon: Rocket,
     },
   ];
 
@@ -447,28 +498,31 @@ function PhysicsBanners() {
         style={{ pointerEvents: activated ? "auto" : "none" }}
       />
       <div className="ribbon-stack">
-        {ribbons.map((r, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              bannerRefs.current[i] = el;
-            }}
-            className="phys-ribbon"
-            style={{
-              background: r.bg,
-              color: r.color,
-              transform: `rotate(${r.angle}deg)`,
-            }}
-          >
-            <div className="ribbon-inner">
-              {[...r.items, ...r.items].map((it, k) => (
-                <span key={k}>
-                  <Star size={14} strokeWidth={3} /> {it}
-                </span>
-              ))}
+        {ribbons.map((r, i) => {
+          const IconComponent = r.icon;
+          return (
+            <div
+              key={i}
+              ref={(el) => {
+                bannerRefs.current[i] = el;
+              }}
+              className="phys-ribbon"
+              style={{
+                background: r.bg,
+                color: r.color,
+                transform: `rotate(${r.angle}deg)`,
+              }}
+            >
+              <div className="ribbon-inner">
+                {[...r.items, ...r.items].map((it, k) => (
+                  <span key={k}>
+                    <IconComponent size={14} strokeWidth={3} /> {it}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
