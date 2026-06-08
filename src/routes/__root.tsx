@@ -10,7 +10,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -38,7 +37,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    console.error("Root error boundary caught:", error);
   }, [error]);
 
   return (
@@ -77,18 +76,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Enhances user interface with updated visuals, real icons, and static, correctly positioned banners." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Enhances user interface with updated visuals, real icons, and static, correctly positioned banners." },
+      { title: "Parasayte — Creative Engineer" },
+      { name: "description", content: "Personal portfolio of Parasayte, a Creative Engineer." },
+      { name: "author", content: "Parasayte" },
+      { property: "og:title", content: "Parasayte — Creative Engineer" },
+      { property: "og:description", content: "Personal portfolio of Parasayte, a Creative Engineer." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Enhances user interface with updated visuals, real icons, and static, correctly positioned banners." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7583c563-df0e-4304-8ea6-fed681900595/id-preview-9904c606--d8d2f90b-9427-47ed-b19a-7c932b77bfdf.lovable.app-1780866567728.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7583c563-df0e-4304-8ea6-fed681900595/id-preview-9904c606--d8d2f90b-9427-47ed-b19a-7c932b77bfdf.lovable.app-1780866567728.png" },
+      { name: "twitter:title", content: "Parasayte — Creative Engineer" },
+      { name: "twitter:description", content: "Personal portfolio of Parasayte, a Creative Engineer." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -125,7 +121,6 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
   );
