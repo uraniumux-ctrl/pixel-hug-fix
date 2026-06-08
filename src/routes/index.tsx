@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import Matter from "matter-js";
 import {
   Mail,
   Phone,
@@ -6,16 +8,12 @@ import {
   Globe,
   Sparkles,
   Code2,
-  Cpu,
-  Layers,
   Zap,
-  Rocket,
-  Star,
-  Hand,
   Twitter,
   Instagram,
   Dribbble,
   ChevronRight,
+  RefreshCw,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -25,7 +23,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Bilingual neo-brutalist portfolio for Parasayte — interactive graphics, physics-driven UI, and full-stack engineering.",
+          "Neo-brutalist portfolio for Parasayte — interactive graphics, physics-driven UI, and full-stack engineering.",
       },
       { property: "og:title", content: "Parasayte — Creative Engineer" },
       {
@@ -37,45 +35,65 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Banner = {
-  label: string;
-  color: string;
-  text: string;
-  Icon: typeof Code2;
-};
-
-const BANNERS: Banner[] = [
-  { label: "React", color: "#a374ff", text: "#fff", Icon: Code2 },
-  { label: "TypeScript", color: "#1982c4", text: "#fff", Icon: Cpu },
-  { label: "Node.js", color: "#3eff8b", text: "#000", Icon: Layers },
-  { label: "WebGL", color: "#ff65c3", text: "#fff", Icon: Sparkles },
-  { label: "Three.js", color: "#ffca3a", text: "#000", Icon: Star },
-  { label: "GSAP", color: "#a374ff", text: "#fff", Icon: Zap },
-  { label: "Rust", color: "#ff7a59", text: "#000", Icon: Rocket },
-  { label: "Figma", color: "#fff", text: "#000", Icon: Hand },
+const PILLS = [
+  { label: "React",       color: "#61DAFB", text: "#000" },
+  { label: "TypeScript",  color: "#3178C6", text: "#fff" },
+  { label: "Node.js",     color: "#3eff8b", text: "#000" },
+  { label: "WebGL",       color: "#ff65c3", text: "#fff" },
+  { label: "Three.js",    color: "#ffca3a", text: "#000" },
+  { label: "GSAP",        color: "#88CE02", text: "#000" },
+  { label: "Rust",        color: "#CE422B", text: "#fff" },
+  { label: "Figma",       color: "#F24E1E", text: "#fff" },
+  { label: "Google",      color: "#4285F4", text: "#fff" },
+  { label: "Meta",        color: "#0081FB", text: "#fff" },
+  { label: "Apple",       color: "#888888", text: "#fff" },
+  { label: "Microsoft",   color: "#00A4EF", text: "#fff" },
+  { label: "AWS",         color: "#FF9900", text: "#000" },
+  { label: "OpenAI",      color: "#10A37F", text: "#fff" },
+  { label: "Replit",      color: "#F26207", text: "#fff" },
+  { label: "Discord",     color: "#5865F2", text: "#fff" },
+  { label: "Next.js",     color: "#e2e2e2", text: "#000" },
+  { label: "Tailwind",    color: "#06B6D4", text: "#fff" },
+  { label: "PostgreSQL",  color: "#336791", text: "#fff" },
+  { label: "Docker",      color: "#2496ED", text: "#fff" },
+  { label: "Vercel",      color: "#f0f0f0", text: "#000" },
+  { label: "Supabase",    color: "#3ECF8E", text: "#000" },
+  { label: "GitHub",      color: "#1F2937", text: "#fff" },
+  { label: "Stripe",      color: "#635BFF", text: "#fff" },
+  { label: "Netlify",     color: "#00C7B7", text: "#000" },
+  { label: "Redis",       color: "#DC382D", text: "#fff" },
+  { label: "GraphQL",     color: "#E10098", text: "#fff" },
+  { label: "Cloudflare",  color: "#F38020", text: "#fff" },
 ];
 
 function Index() {
+  const [lang, setLang] = useState<"en" | "ar">("en");
+  const en = lang === "en";
+
   return (
-    <div className="brutal-root">
+    <div className="brutal-root" dir={en ? "ltr" : "rtl"}>
       <style>{CSS}</style>
 
       <header className="brutal-header">
         <div className="brutal-logo">
           <Sparkles size={18} strokeWidth={3} />
-          <span>PARASAYTE // ملف التعريف</span>
+          <span>PARASAYTE</span>
         </div>
-        <div className="lang-badge">
+        <button
+          className="lang-badge"
+          onClick={() => setLang(en ? "ar" : "en")}
+        >
           <Globe size={16} strokeWidth={3} />
-          EN / AR
-        </div>
+          {en ? "العربية" : "English"}
+        </button>
       </header>
 
       <main className="cv-grid">
         {/* Profile */}
         <section className="brutal-card">
           <div className="card-tag">
-            <Code2 size={14} strokeWidth={3} /> CREATIVE ENGINEER · مهندس برمجيات
+            <Code2 size={14} strokeWidth={3} />
+            {en ? "CREATIVE ENGINEER" : "مهندس برمجيات"}
           </div>
 
           <div className="profile-container">
@@ -86,26 +104,21 @@ function Index() {
               />
             </div>
             <div>
-              <h1 className="profile-name">Parasayte</h1>
-              <h2 className="profile-name-ar">باراسايت</h2>
+              <h1 className="profile-name">
+                {en ? "Parasayte" : "باراسايت"}
+              </h1>
             </div>
           </div>
 
           <h2 className="section-title">
-            <span>About Me</span>
-            <span className="title-ar">نبذة عني</span>
+            {en ? "About Me" : "نبذة عني"}
           </h2>
 
-          <div className="bilingual-row">
-            <p className="bi-desc">
-              Full-stack engineer specialised in interactive graphics, dynamic
-              physics architectures, and production-ready high-performance systems.
-            </p>
-            <p className="bi-desc" lang="ar">
-              مهندس برمجيات متكامل متخصص في بيئات الجرافيكس التفاعلية وهندسة
-              الواجهات وبناء أنظمة برمجية متكاملة بأداء عالٍ.
-            </p>
-          </div>
+          <p className="about-desc">
+            {en
+              ? "Full-stack engineer specialised in interactive graphics, dynamic physics architectures, and production-ready high-performance systems."
+              : "مهندس برمجيات متكامل متخصص في بيئات الجرافيكس التفاعلية وهندسة الواجهات وبناء أنظمة برمجية متكاملة بأداء عالٍ."}
+          </p>
 
           <div className="contact-row">
             <a href="mailto:hougjgrxkj@gmail.com" className="contact-button">
@@ -127,35 +140,23 @@ function Index() {
           </div>
         </section>
 
-        {/* Stack card — static pill grid (no physics here, kept tidy) */}
+        {/* Toolbelt — physics pills */}
         <section className="brutal-card stack-card">
           <div className="card-tag tag-accent">
-            <Zap size={14} strokeWidth={3} /> STACK · المنظومة التقنية
+            <Zap size={14} strokeWidth={3} />
+            {en ? "STACK" : "المنظومة التقنية"}
           </div>
           <h2 className="section-title">
-            <span>Toolbelt</span>
-            <span className="title-ar">الأدوات</span>
+            {en ? "Toolbelt" : "الأدوات"}
           </h2>
-          <div className="stack-grid">
-            {BANNERS.map(({ label, color, text, Icon }) => (
-              <div
-                key={label}
-                className="stack-pill"
-                style={{ background: color, color: text }}
-              >
-                <Icon size={16} strokeWidth={3} />
-                {label}
-              </div>
-            ))}
-          </div>
+          <ToolbeltPhysics />
         </section>
 
         {/* Projects */}
         <section className="project-showcase">
           <div className="brutal-card section-head">
             <h2 className="section-title" style={{ margin: 0 }}>
-              <span>Featured Systems</span>
-              <span className="title-ar">أبرز المشاريع</span>
+              {en ? "Featured Systems" : "أبرز المشاريع"}
             </h2>
           </div>
 
@@ -166,14 +167,9 @@ function Index() {
               </div>
               <div className="project-details">
                 <h3>{p.title}</h3>
-                <div className="bilingual-row">
-                  <div className="bi-desc">{p.en}</div>
-                  <div className="bi-desc" lang="ar">
-                    {p.ar}
-                  </div>
-                </div>
+                <p className="about-desc">{en ? p.en : p.ar}</p>
                 <a className="project-link" href="#">
-                  View case study <ChevronRight size={14} strokeWidth={3} />
+                  {en ? "View case study" : "عرض الدراسة"} <ChevronRight size={14} strokeWidth={3} />
                 </a>
               </div>
             </article>
@@ -186,10 +182,11 @@ function Index() {
       <footer className="brutal-footer">
         <div className="footer-container">
           <div className="footer-branding">
-            <h3>Let's build something loud.</h3>
+            <h3>{en ? "Let's build something loud." : "لنبنِ شيئاً يُسمع."}</h3>
             <p>
-              Available for selected freelance & contract engagements across
-              interactive engineering, motion design, and product systems.
+              {en
+                ? "Available for selected freelance & contract engagements across interactive engineering, motion design, and product systems."
+                : "متاح للمشاريع المستقلة والعقود المختارة في هندسة التفاعل وتصميم الحركة وأنظمة المنتجات."}
             </p>
             <div className="footer-socials">
               <a className="social-icon-btn" href="https://twitter.com" aria-label="Twitter">
@@ -208,17 +205,17 @@ function Index() {
           </div>
 
           <div className="footer-links-col">
-            <h4>Navigate</h4>
+            <h4>{en ? "Navigate" : "التنقل"}</h4>
             <ul>
-              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> Work</a></li>
-              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> About</a></li>
-              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> Journal</a></li>
-              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> Contact</a></li>
+              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> {en ? "Work" : "الأعمال"}</a></li>
+              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> {en ? "About" : "عني"}</a></li>
+              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> {en ? "Journal" : "المدونة"}</a></li>
+              <li><a href="#"><ChevronRight size={12} strokeWidth={3} /> {en ? "Contact" : "التواصل"}</a></li>
             </ul>
           </div>
 
           <div className="footer-links-col">
-            <h4>Contact</h4>
+            <h4>{en ? "Contact" : "تواصل"}</h4>
             <ul>
               <li><a href="mailto:hougjgrxkj@gmail.com"><Mail size={12} strokeWidth={3} /> hougjgrxkj@gmail.com</a></li>
               <li><a href="tel:+905411442870"><Phone size={12} strokeWidth={3} /> +90 541 144 2870</a></li>
@@ -227,10 +224,135 @@ function Index() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© 2026 Parasayte · All rights reserved</p>
-          <p>Built with React · Matter.js · loud typography</p>
+          <p>© 2026 Parasayte · {en ? "All rights reserved" : "جميع الحقوق محفوظة"}</p>
+          <p>{en ? "Built with React · Matter.js · loud typography" : "مبني بـ React · Matter.js"}</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* TOOLBELT PHYSICS                                                     */
+/* Pills fall into the card, stack, and are draggable with the mouse.  */
+/* ------------------------------------------------------------------ */
+function ToolbeltPhysics() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const engineRef = useRef<Matter.Engine | null>(null);
+  const renderRef = useRef<Matter.Render | null>(null);
+  const runnerRef = useRef<Matter.Runner | null>(null);
+  const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+
+    const W = container.clientWidth;
+    const H = 380;
+    canvas.width = W;
+    canvas.height = H;
+
+    const engine = Matter.Engine.create({ gravity: { y: 1.4 } });
+    engineRef.current = engine;
+
+    const render = Matter.Render.create({
+      canvas,
+      engine,
+      options: {
+        width: W,
+        height: H,
+        wireframes: false,
+        background: "transparent",
+        pixelRatio: Math.min(window.devicePixelRatio, 2),
+      },
+    });
+    renderRef.current = render;
+
+    const wallOpts = { isStatic: true, render: { fillStyle: "transparent", strokeStyle: "transparent", lineWidth: 0 } };
+    Matter.Composite.add(engine.world, [
+      Matter.Bodies.rectangle(W / 2, H + 25, W * 2, 50, wallOpts),
+      Matter.Bodies.rectangle(-25, H / 2, 50, H * 2, wallOpts),
+      Matter.Bodies.rectangle(W + 25, H / 2, 50, H * 2, wallOpts),
+    ]);
+
+    const PH = 36;
+    const ctx = canvas.getContext("2d")!;
+
+    const bodies = PILLS.map((pill, i) => {
+      ctx.font = "bold 13px Syne, sans-serif";
+      const tw = ctx.measureText(pill.label).width;
+      const PW = Math.ceil(tw + 32);
+      const col = i % 4;
+      const startX = (col + 0.5) * (W / 4) + (Math.random() - 0.5) * 30;
+      const startY = -PH - i * 28;
+      const body = Matter.Bodies.rectangle(startX, startY, PW, PH, {
+        restitution: 0.3,
+        friction: 0.5,
+        frictionAir: 0.02,
+        render: { fillStyle: pill.color, strokeStyle: "#000", lineWidth: 2 },
+      });
+      (body as unknown as { pillIndex: number }).pillIndex = i;
+      return { body, pill, PW };
+    });
+
+    Matter.Composite.add(engine.world, bodies.map((b) => b.body));
+
+    Matter.Events.on(render, "afterRender", () => {
+      const ctx2 = render.context;
+      bodies.forEach(({ body, pill, PW }) => {
+        const { x, y } = body.position;
+        const angle = body.angle;
+        ctx2.save();
+        ctx2.translate(x, y);
+        ctx2.rotate(angle);
+        ctx2.fillStyle = pill.text;
+        ctx2.font = "bold 13px Syne, sans-serif";
+        ctx2.textAlign = "center";
+        ctx2.textBaseline = "middle";
+        ctx2.fillText(pill.label, 0, 1);
+        ctx2.restore();
+        void PW;
+      });
+    });
+
+    const mouse = Matter.Mouse.create(canvas);
+    const mc = Matter.MouseConstraint.create(engine, {
+      mouse,
+      constraint: { stiffness: 0.25, render: { visible: false } },
+    });
+    Matter.Composite.add(engine.world, mc);
+    (mouse as unknown as { element: HTMLElement }).element.removeEventListener(
+      "wheel",
+      (mouse as unknown as { mousewheel: EventListener }).mousewheel,
+    );
+
+    Matter.Render.run(render);
+    const runner = Matter.Runner.create();
+    runnerRef.current = runner;
+    Matter.Runner.run(runner, engine);
+
+    return () => {
+      Matter.Render.stop(render);
+      Matter.Runner.stop(runner);
+      Matter.Composite.clear(engine.world, false);
+      Matter.Engine.clear(engine);
+    };
+  }, [key]);
+
+  return (
+    <div className="toolbelt-physics-wrap">
+      <div ref={containerRef} className="toolbelt-canvas-container">
+        <canvas ref={canvasRef} className="toolbelt-canvas" />
+      </div>
+      <button
+        className="reset-btn"
+        onClick={() => setKey((k) => k + 1)}
+        title="Reset"
+      >
+        <RefreshCw size={14} strokeWidth={3} /> Reset
+      </button>
     </div>
   );
 }
@@ -316,10 +438,6 @@ const CSS = `
   font-weight: 800;
   text-transform: uppercase;
 }
-.brutal-root [lang="ar"], .title-ar, .profile-name-ar {
-  font-family: 'Cairo', sans-serif;
-  direction: rtl;
-}
 
 .brutal-header {
   padding: 25px;
@@ -335,10 +453,13 @@ const CSS = `
 }
 .lang-badge {
   background: #fff; color: #000;
-  padding: 8px 16px; border: var(--border-thick); border-radius: 15px;
+  padding: 8px 20px; border: var(--border-thick); border-radius: 15px;
   font-weight: 800; box-shadow: var(--shadow-brutal);
   display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; font-family: 'Syne', sans-serif; font-size: .95rem;
+  transition: transform .12s, box-shadow .12s;
 }
+.lang-badge:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 #000; }
 
 .cv-grid {
   max-width: 1300px; margin: 20px auto 80px;
@@ -368,9 +489,7 @@ const CSS = `
 .section-title {
   font-size: 2rem; margin-bottom: 22px;
   letter-spacing: -1px; line-height: 1.1;
-  display: flex; justify-content: space-between; align-items: center; gap: 12px;
 }
-.title-ar { font-size: 1.6rem; color: var(--primary); }
 
 .profile-container {
   display: flex; gap: 22px; align-items: center; margin-bottom: 26px;
@@ -383,10 +502,10 @@ const CSS = `
 }
 .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
 .profile-name { font-size: 2rem; letter-spacing: -1px; line-height: 1.05; }
-.profile-name-ar { font-size: 1.2rem; color: var(--secondary); margin-top: 4px; }
 
-.bilingual-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
-.bi-desc { font-size: .92rem; color: var(--muted); line-height: 1.55; width: 48%; }
+.about-desc {
+  font-size: .92rem; color: var(--muted); line-height: 1.6; margin-bottom: 12px;
+}
 
 .contact-row {
   display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px;
@@ -402,20 +521,27 @@ const CSS = `
 .contact-button:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #000; }
 .contact-button svg { color: var(--secondary); }
 
-.stack-card .stack-grid {
-  display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 18px;
+/* TOOLBELT PHYSICS */
+.stack-card { padding-bottom: 20px; }
+.toolbelt-physics-wrap { display: flex; flex-direction: column; gap: 10px; }
+.toolbelt-canvas-container {
+  width: 100%; height: 380px;
+  border: var(--border-thick); border-radius: 18px;
+  overflow: hidden; background: #0d0e12;
+  cursor: grab;
 }
-.stack-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 16px; border: var(--border-thick); border-radius: 40px;
-  box-shadow: var(--shadow-brutal); font-weight: 800; font-size: .9rem;
-  letter-spacing: .3px;
+.toolbelt-canvas-container:active { cursor: grabbing; }
+.toolbelt-canvas { display: block; width: 100%; height: 100%; }
+.reset-btn {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #212431; border: 2px solid #000; border-radius: 12px;
+  padding: 8px 16px; color: var(--muted); font-weight: 700; font-size: .82rem;
+  cursor: pointer; box-shadow: 3px 3px 0 #000;
+  transition: transform .12s, box-shadow .12s;
+  text-transform: uppercase; letter-spacing: .5px;
 }
-.hint {
-  display: inline-flex; align-items: center; gap: 8px;
-  color: var(--accent); font-weight: 700; font-size: .85rem;
-  margin-top: 8px;
-}
+.reset-btn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 #000; color: var(--accent); }
 
 .project-showcase {
   grid-column: span 2;
@@ -445,16 +571,10 @@ const CSS = `
 }
 
 /* SCROLLING BANNERS */
-.scroll-stage {
-  margin: 40px 0 80px;
-  overflow: hidden;
-}
+.scroll-stage { margin: 40px 0 80px; overflow: hidden; }
 .scroll-ribbon {
-  border-top: var(--border-thick);
-  border-bottom: var(--border-thick);
-  padding: 16px 0;
-  overflow: hidden;
-  margin-bottom: -4px;
+  border-top: var(--border-thick); border-bottom: var(--border-thick);
+  padding: 16px 0; overflow: hidden; margin-bottom: -4px;
 }
 .scroll-track {
   display: flex; white-space: nowrap;
@@ -463,12 +583,8 @@ const CSS = `
   text-transform: uppercase; letter-spacing: 1px;
 }
 .scroll-track span { display: inline-block; }
-.scroll-ltr {
-  animation: scrollLTR 22s linear infinite;
-}
-.scroll-rtl {
-  animation: scrollRTL 22s linear infinite;
-}
+.scroll-ltr { animation: scrollLTR 22s linear infinite; }
+.scroll-rtl { animation: scrollRTL 22s linear infinite; }
 @keyframes scrollLTR {
   0%   { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-50%, 0, 0); }
@@ -481,16 +597,13 @@ const CSS = `
 /* FOOTER */
 .brutal-footer {
   background: #161820; border-top: var(--border-thick);
-  padding: 60px 25px 30px;
-  position: relative; z-index: 1;
+  padding: 60px 25px 30px; position: relative; z-index: 1;
 }
 .footer-container {
   max-width: 1300px; margin: 0 auto;
   display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px;
 }
-@media (max-width: 850px) {
-  .footer-container { grid-template-columns: 1fr; gap: 36px; }
-}
+@media (max-width: 850px) { .footer-container { grid-template-columns: 1fr; gap: 36px; } }
 .footer-branding h3 { font-size: 1.8rem; margin-bottom: 12px; color: var(--accent); }
 .footer-branding p { color: var(--muted); line-height: 1.6; max-width: 450px; margin-bottom: 22px; }
 .footer-links-col h4 {
@@ -501,8 +614,7 @@ const CSS = `
 .footer-links-col ul li { margin-bottom: 10px; }
 .footer-links-col ul li a {
   color: var(--muted); text-decoration: none; font-weight: 600;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: color .2s;
+  display: inline-flex; align-items: center; gap: 8px; transition: color .2s;
 }
 .footer-links-col ul li a:hover { color: var(--secondary); }
 .footer-socials { display: flex; gap: 12px; }
