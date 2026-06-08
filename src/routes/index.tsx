@@ -1,10 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import Matter from "matter-js";
 import {
   Mail,
   Phone,
-  Linkedin,
   Github,
   Globe,
   Sparkles,
@@ -15,16 +12,10 @@ import {
   Rocket,
   Star,
   Hand,
-  ArrowDown,
   Twitter,
   Instagram,
   Dribbble,
-  Send,
   ChevronRight,
-  Braces,
-  Database,
-  Cloud,
-  Lock,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -157,10 +148,6 @@ function Index() {
               </div>
             ))}
           </div>
-          <p className="hint">
-            <ArrowDown size={14} strokeWidth={3} /> scroll down — the banners
-            below collapse under gravity
-          </p>
         </section>
 
         {/* Projects */}
@@ -194,8 +181,7 @@ function Index() {
         </section>
       </main>
 
-      {/* PHYSICS BANNERS — static in flow, fall on scroll */}
-      <PhysicsBanners />
+      <ScrollingBanners />
 
       <footer className="brutal-footer">
         <div className="footer-container">
@@ -276,254 +262,25 @@ const PROJECTS = [
   },
 ];
 
-/* -------------------------------------------------------------- */
-/* PHYSICS BANNERS                                                 */
-/* Banners render in normal flow (static & in correct place).      */
-/* On first scroll a fixed Matter.js canvas activates: each banner */
-/* becomes a rigid body at its current screen position and falls   */
-/* under gravity, colliding & stacking on top of one another.      */
-/* -------------------------------------------------------------- */
-function PhysicsBanners() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const bannerRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [activated, setActivated] = useState(false);
+const SCROLL_ROWS = [
+  { bg: "#ff65c3", color: "#000", dir: "left",  items: ["GRADE", "ENGINEERING", "PRODUCTION", "REACT", "BACKEND", "DATABASE"] },
+  { bg: "#a374ff", color: "#fff", dir: "right", items: ["FULLSTACK", "DESIGN", "BUILD", "DEPLOY", "SCALE", "SHIP"] },
+  { bg: "#3eff8b", color: "#000", dir: "left",  items: ["INTERACTIVE", "GRAPHICS", "MOTION", "WEBGL", "TYPESCRIPT", "NODE"] },
+  { bg: "#ffca3a", color: "#000", dir: "right", items: ["GITHUB", "VERCEL", "STRIPE", "SUPABASE", "TAILWIND", "NEXTJS"] },
+];
 
-  // Banner content for the physics ribbons - now with company banners
-  const ribbons = [
-    {
-      bg: "#ff65c3",
-      color: "#000",
-      angle: -1.2,
-      items: ["DESIGN", "BUILD", "SHIP", "تصميم", "بناء", "إطلاق"],
-      icon: Star,
-    },
-    {
-      bg: "#a374ff",
-      color: "#fff",
-      angle: 1,
-      items: ["INTERACTIVE", "GRAPHICS", "MOTION", "حركة", "تفاعل", "جرافيكس"],
-      icon: Sparkles,
-    },
-    {
-      bg: "#3eff8b",
-      color: "#000",
-      angle: -0.6,
-      items: ["FULL · STACK", "REACT", "WEBGL", "أنظمة", "تجارب", "أداء"],
-      icon: Code2,
-    },
-    {
-      bg: "#ffca3a",
-      color: "#000",
-      angle: 0.8,
-      items: ["PRODUCTION", "GRADE", "ENGINEERING", "إنتاج", "هندسة", "جودة"],
-      icon: Rocket,
-    },
-    // New company/platform banners
-    {
-      bg: "#1F2937",
-      color: "#fff",
-      angle: -1.5,
-      items: ["GITHUB", "ENTERPRISE", "VERSION CONTROL", "كود", "تعاون", "إدارة"],
-      icon: Github,
-    },
-    {
-      bg: "#FF6B35",
-      color: "#fff",
-      angle: 1.2,
-      items: ["STRIPE", "PAYMENTS", "COMMERCE", "دفع", "معاملات", "تجارة"],
-      icon: Lock,
-    },
-    {
-      bg: "#4F46E5",
-      color: "#fff",
-      angle: -0.9,
-      items: ["VERCEL", "DEPLOYMENT", "EDGE NETWORK", "نشر", "سحابة", "أداء"],
-      icon: Cloud,
-    },
-    {
-      bg: "#10B981",
-      color: "#fff",
-      angle: 0.5,
-      items: ["SUPABASE", "DATABASE", "BACKEND", "بيانات", "خادم", "API"],
-      icon: Database,
-    },
-    {
-      bg: "#8B5CF6",
-      color: "#fff",
-      angle: -0.3,
-      items: ["TAILWIND CSS", "STYLING", "COMPONENTS", "تصميم", "أسلوب", "ديناميكي"],
-      icon: Braces,
-    },
-    {
-      bg: "#EC4899",
-      color: "#fff",
-      angle: 1.1,
-      items: ["NEXTJS", "FRAMEWORK", "FULLSTACK", "إطار عمل", "ريأكت", "خادم"],
-      icon: Rocket,
-    },
-  ];
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY > 80) {
-        setActivated(true);
-        window.removeEventListener("scroll", onScroll);
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!activated || !canvasRef.current || !wrapRef.current) return;
-
-    const banners = bannerRefs.current.filter(Boolean) as HTMLDivElement[];
-    if (banners.length === 0) return;
-
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const canvas = canvasRef.current;
-
-    const engine = Matter.Engine.create();
-    engine.gravity.y = 1.2;
-
-    const render = Matter.Render.create({
-      canvas,
-      engine,
-      options: {
-        width: W,
-        height: H,
-        wireframes: false,
-        background: "transparent",
-        pixelRatio: window.devicePixelRatio,
-      },
-    });
-
-    // Walls
-    const wallOpts = { isStatic: true, render: { visible: false } };
-    const floor = Matter.Bodies.rectangle(W / 2, H + 30, W * 2, 60, wallOpts);
-    const left = Matter.Bodies.rectangle(-30, H / 2, 60, H * 2, wallOpts);
-    const right = Matter.Bodies.rectangle(W + 30, H / 2, 60, H * 2, wallOpts);
-    Matter.Composite.add(engine.world, [floor, left, right]);
-
-    // Build a body per banner at its current screen position
-    type Pair = { body: Matter.Body; el: HTMLDivElement; w: number; h: number };
-    const pairs: Pair[] = [];
-
-    banners.forEach((el, i) => {
-      const r = el.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
-      const body = Matter.Bodies.rectangle(cx, cy, r.width, r.height, {
-        restitution: 0.35,
-        friction: 0.4,
-        density: 0.0025,
-        angle: ((ribbons[i]?.angle ?? 0) * Math.PI) / 180,
-        render: { visible: false },
-      });
-      Matter.Composite.add(engine.world, body);
-      pairs.push({ body, el, w: r.width, h: r.height });
-
-      // Take the element out of flow so physics drives position
-      el.style.position = "fixed";
-      el.style.left = "0";
-      el.style.top = "0";
-      el.style.margin = "0";
-      el.style.width = r.width + "px";
-      el.style.transform = `translate(${cx - r.width / 2}px, ${cy - r.height / 2}px) rotate(${ribbons[i]?.angle ?? 0}deg)`;
-      el.style.willChange = "transform";
-      el.style.transition = "none";
-      el.style.zIndex = "30";
-    });
-
-    // Mouse drag
-    const mouse = Matter.Mouse.create(canvas);
-    const mouseConstraint = Matter.MouseConstraint.create(engine, {
-      mouse,
-      constraint: { stiffness: 0.2, render: { visible: false } },
-    });
-    Matter.Composite.add(engine.world, mouseConstraint);
-    // Re-enable scroll passthrough on wheel
-    (mouse as unknown as { element: HTMLElement }).element.removeEventListener(
-      "wheel",
-      (mouse as unknown as { mousewheel: EventListener }).mousewheel,
-    );
-
-    Matter.Render.run(render);
-    const runner = Matter.Runner.create();
-    Matter.Runner.run(runner, engine);
-
-    // Sync DOM to bodies
-    let raf = 0;
-    const sync = () => {
-      pairs.forEach(({ body, el, w, h }) => {
-        const x = body.position.x - w / 2;
-        const y = body.position.y - h / 2;
-        const deg = (body.angle * 180) / Math.PI;
-        el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${deg}deg)`;
-      });
-      raf = requestAnimationFrame(sync);
-    };
-    raf = requestAnimationFrame(sync);
-
-    // Resize → reset walls
-    const onResize = () => {
-      const w2 = window.innerWidth;
-      const h2 = window.innerHeight;
-      canvas.width = w2;
-      canvas.height = h2;
-      render.options.width = w2;
-      render.options.height = h2;
-      Matter.Body.setPosition(floor, { x: w2 / 2, y: h2 + 30 });
-      Matter.Body.setPosition(right, { x: w2 + 30, y: h2 / 2 });
-    };
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", onResize);
-      Matter.Render.stop(render);
-      Matter.Runner.stop(runner);
-      Matter.Composite.clear(engine.world, false);
-      Matter.Engine.clear(engine);
-    };
-  }, [activated]);
-
+function ScrollingBanners() {
   return (
-    <section ref={wrapRef} className="physics-stage" aria-label="Skill banners">
-      <canvas
-        ref={canvasRef}
-        className="physics-canvas"
-        style={{ pointerEvents: activated ? "auto" : "none" }}
-      />
-      <div className="ribbon-stack">
-        {ribbons.map((r, i) => {
-          const IconComponent = r.icon;
-          return (
-            <div
-              key={i}
-              ref={(el) => {
-                bannerRefs.current[i] = el;
-              }}
-              className="phys-ribbon"
-              style={{
-                background: r.bg,
-                color: r.color,
-                transform: `rotate(${r.angle}deg)`,
-              }}
-            >
-              <div className="ribbon-inner">
-                {[...r.items, ...r.items].map((it, k) => (
-                  <span key={k}>
-                    <IconComponent size={14} strokeWidth={3} /> {it}
-                  </span>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    <section className="scroll-stage" aria-label="Skill banners">
+      {SCROLL_ROWS.map((row, i) => (
+        <div key={i} className="scroll-ribbon" style={{ background: row.bg, color: row.color }}>
+          <div className={`scroll-track ${row.dir === "right" ? "scroll-rtl" : "scroll-ltr"}`}>
+            {[...row.items, ...row.items, ...row.items, ...row.items].map((item, k) => (
+              <span key={k}>{item}&nbsp;&nbsp;·&nbsp;&nbsp;</span>
+            ))}
+          </div>
+        </div>
+      ))}
     </section>
   );
 }
@@ -687,38 +444,38 @@ const CSS = `
   text-transform: uppercase; letter-spacing: .5px;
 }
 
-/* PHYSICS STAGE */
-.physics-stage {
-  position: relative;
-  max-width: 1300px; margin: 40px auto 120px;
-  padding: 0 25px;
+/* SCROLLING BANNERS */
+.scroll-stage {
+  margin: 40px 0 80px;
+  overflow: hidden;
 }
-.physics-canvas {
-  position: fixed; inset: 0; width: 100vw; height: 100vh;
-  z-index: 25; pointer-events: none;
+.scroll-ribbon {
+  border-top: var(--border-thick);
+  border-bottom: var(--border-thick);
+  padding: 16px 0;
+  overflow: hidden;
+  margin-bottom: -4px;
 }
-.ribbon-stack {
-  display: flex; flex-direction: column; gap: 28px;
+.scroll-track {
+  display: flex; white-space: nowrap;
+  font-family: 'Syne', sans-serif;
+  font-weight: 900; font-size: 1.5rem;
+  text-transform: uppercase; letter-spacing: 1px;
 }
-.phys-ribbon {
-  border: var(--border-thick); box-shadow: var(--shadow-brutal-lg);
-  padding: 18px 0; overflow: hidden;
-  border-radius: 14px;
-  will-change: transform;
+.scroll-track span { display: inline-block; }
+.scroll-ltr {
+  animation: scrollLTR 22s linear infinite;
 }
-.ribbon-inner {
-  display: flex; gap: 36px; white-space: nowrap;
-  animation: ribbonScroll 28s linear infinite;
+.scroll-rtl {
+  animation: scrollRTL 22s linear infinite;
 }
-.ribbon-inner span {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: 'Syne', 'Cairo', sans-serif;
-  font-weight: 900; font-size: 1.4rem;
-  text-transform: uppercase;
+@keyframes scrollLTR {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
-@keyframes ribbonScroll {
-  0% { transform: translate3d(0,0,0); }
-  100% { transform: translate3d(-50%,0,0); }
+@keyframes scrollRTL {
+  0%   { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 /* FOOTER */
