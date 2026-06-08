@@ -49,7 +49,7 @@ const PILLS = [
   { label: "Apple",       color: "#555555", text: "#fff", slug: "apple"        },
   { label: "Microsoft",   color: "#00A4EF", text: "#fff", slug: "microsoft"    },
   { label: "AWS",         color: "#FF9900", text: "#000", slug: "amazonaws"    },
-  { label: "OpenAI",      color: "#10A37F", text: "#fff", slug: "openai"       },
+  { label: "OpenAI",      color: "#10A37F", text: "#fff", slug: "anthropic"    },
   { label: "Replit",      color: "#F26207", text: "#fff", slug: "replit"       },
   { label: "Discord",     color: "#5865F2", text: "#fff", slug: "discord"      },
   { label: "Next.js",     color: "#e2e2e2", text: "#000", slug: "nextdotjs"    },
@@ -63,40 +63,42 @@ const PILLS = [
   { label: "Redis",       color: "#DC382D", text: "#fff", slug: "redis"        },
   { label: "GraphQL",     color: "#E10098", text: "#fff", slug: "graphql"      },
   { label: "Cloudflare",  color: "#F38020", text: "#fff", slug: "cloudflare"   },
+  { label: "Kubernetes",  color: "#326CE5", text: "#fff", slug: "kubernetes"   },
+  { label: "Terraform",   color: "#844FBA", text: "#fff", slug: "terraform"    },
 ];
 
 const LOGO_ROW1 = [
-  { name: "Replit",     slug: "replit"     },
-  { name: "GitHub",     slug: "github"     },
-  { name: "Google",     slug: "google"     },
-  { name: "Kali Linux", slug: "kalilinux"  },
-  { name: "Microsoft",  slug: "microsoft"  },
-  { name: "Meta",       slug: "meta"       },
-  { name: "Apple",      slug: "apple"      },
-  { name: "AWS",        slug: "amazonaws"  },
-  { name: "OpenAI",     slug: "openai"     },
-  { name: "Discord",    slug: "discord"    },
-  { name: "Vercel",     slug: "vercel"     },
-  { name: "Figma",      slug: "figma"      },
-  { name: "Stripe",     slug: "stripe"     },
-  { name: "Spotify",    slug: "spotify"    },
+  { name: "Replit",      slug: "replit",          color: "F26207" },
+  { name: "GitHub",      slug: "github",           color: "ffffff" },
+  { name: "Google",      slug: "google",           color: "4285F4" },
+  { name: "Kali Linux",  slug: "kalilinux",        color: "557C94" },
+  { name: "Kubernetes",  slug: "kubernetes",       color: "326CE5" },
+  { name: "Meta",        slug: "meta",             color: "0081FB" },
+  { name: "Apple",       slug: "apple",            color: "ffffff" },
+  { name: "Terraform",   slug: "terraform",        color: "844FBA" },
+  { name: "Anthropic",   slug: "anthropic",        color: "ffffff" },
+  { name: "Discord",     slug: "discord",          color: "5865F2" },
+  { name: "Vercel",      slug: "vercel",           color: "ffffff" },
+  { name: "Figma",       slug: "figma",            color: "F24E1E" },
+  { name: "Stripe",      slug: "stripe",           color: "635BFF" },
+  { name: "Spotify",     slug: "spotify",          color: "1DB954" },
 ];
 
 const LOGO_ROW2 = [
-  { name: "Docker",     slug: "docker"     },
-  { name: "Tailwind",   slug: "tailwindcss"},
-  { name: "PostgreSQL", slug: "postgresql" },
-  { name: "Redis",      slug: "redis"      },
-  { name: "Cloudflare", slug: "cloudflare" },
-  { name: "Next.js",    slug: "nextdotjs"  },
-  { name: "GraphQL",    slug: "graphql"    },
-  { name: "Netflix",    slug: "netflix"    },
-  { name: "Notion",     slug: "notion"     },
-  { name: "Linear",     slug: "linear"     },
-  { name: "Supabase",   slug: "supabase"   },
-  { name: "MongoDB",    slug: "mongodb"    },
-  { name: "Firebase",   slug: "firebase"   },
-  { name: "TypeScript", slug: "typescript" },
+  { name: "Docker",     slug: "docker",      color: "2496ED" },
+  { name: "Tailwind",   slug: "tailwindcss", color: "06B6D4" },
+  { name: "PostgreSQL", slug: "postgresql",  color: "4169E1" },
+  { name: "Redis",      slug: "redis",       color: "FF4438" },
+  { name: "Cloudflare", slug: "cloudflare",  color: "F38020" },
+  { name: "Next.js",    slug: "nextdotjs",   color: "ffffff" },
+  { name: "GraphQL",    slug: "graphql",     color: "E10098" },
+  { name: "Netflix",    slug: "netflix",     color: "E50914" },
+  { name: "Notion",     slug: "notion",      color: "ffffff" },
+  { name: "Linear",     slug: "linear",      color: "5E6AD2" },
+  { name: "Supabase",   slug: "supabase",    color: "3ECF8E" },
+  { name: "MongoDB",    slug: "mongodb",     color: "47A248" },
+  { name: "Firebase",   slug: "firebase",    color: "FFCA28" },
+  { name: "TypeScript", slug: "typescript",  color: "3178C6" },
 ];
 
 function Index() {
@@ -313,7 +315,7 @@ function ToolbeltPhysics() {
     canvas.width  = W;
     canvas.height = H;
 
-    const engine = Matter.Engine.create({ gravity: { y: 1.5 } });
+    const engine = Matter.Engine.create({ gravity: { y: 2.2 } });
     const render  = Matter.Render.create({
       canvas, engine,
       options: { width: W, height: H, wireframes: false, background: "transparent" },
@@ -332,8 +334,9 @@ function ToolbeltPhysics() {
       const PW   = el.offsetWidth || 90;
       const cols = W < 400 ? 3 : 4;
       const col  = i % cols;
+      const row  = Math.floor(i / cols);
       const startX = (col + 0.5) * (W / cols) + (Math.random() - 0.5) * 18;
-      const startY = -PH - i * 34;
+      const startY = -(PH + row * (PH + 12) + Math.random() * 10);
       return Matter.Bodies.rectangle(startX, startY, PW, PH, {
         restitution: 0.25,
         friction:    0.55,
@@ -420,8 +423,8 @@ function ToolbeltPhysics() {
 /* B&W by default → full color + scale on hover                        */
 /* ------------------------------------------------------------------ */
 function CompanyLogoStrip() {
-  const row1 = [...LOGO_ROW1, ...LOGO_ROW1];
-  const row2 = [...LOGO_ROW2, ...LOGO_ROW2];
+  const row1 = [...LOGO_ROW1, ...LOGO_ROW1, ...LOGO_ROW1];
+  const row2 = [...LOGO_ROW2, ...LOGO_ROW2, ...LOGO_ROW2];
   return (
     <section className="logo-strip-section">
       <div className="logo-strip-row">
@@ -429,13 +432,12 @@ function CompanyLogoStrip() {
           {row1.map((logo, i) => (
             <div key={i} className="logo-item">
               <img
-                src={`https://cdn.simpleicons.org/${logo.slug}`}
+                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.color ?? ""}`}
                 alt={logo.name}
                 className="logo-img"
                 draggable={false}
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
-              <span className="logo-label">{logo.name}</span>
             </div>
           ))}
         </div>
@@ -445,13 +447,12 @@ function CompanyLogoStrip() {
           {row2.map((logo, i) => (
             <div key={i} className="logo-item">
               <img
-                src={`https://cdn.simpleicons.org/${logo.slug}`}
+                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.color ?? ""}`}
                 alt={logo.name}
                 className="logo-img"
                 draggable={false}
                 onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
-              <span className="logo-label">{logo.name}</span>
             </div>
           ))}
         </div>
@@ -531,15 +532,28 @@ const CSS = `
     radial-gradient(circle at 20% 25%, rgba(163,116,255,.18) 0%, transparent 50%),
     radial-gradient(circle at 80% 75%, rgba(255,101,195,.15) 0%, transparent 50%),
     radial-gradient(circle at 50% 50%, rgba(62,255,139,.08) 0%, transparent 60%);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
   color: var(--text);
   overflow-x: hidden;
   min-height: 100vh;
 }
+[dir="rtl"] {
+  font-family: 'IBM Plex Sans Arabic', 'Cairo', sans-serif;
+}
 .brutal-root h1, .brutal-root h2, .brutal-root h3, .brutal-root h4, .brutal-logo {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Syne', 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;
   text-transform: uppercase;
+}
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] .brutal-logo,
+[dir="rtl"] .section-title,
+[dir="rtl"] .profile-name,
+[dir="rtl"] .card-tag {
+  font-family: 'IBM Plex Sans Arabic', 'Cairo', sans-serif;
 }
 
 .brutal-header {
@@ -679,7 +693,7 @@ const CSS = `
 }
 .logo-strip-row {
   overflow: hidden;
-  padding: 22px 0;
+  padding: 28px 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .logo-strip-row:last-child { border-bottom: none; }
@@ -688,34 +702,26 @@ const CSS = `
   align-items: center;
   white-space: nowrap;
 }
-@keyframes logoScrollLTR { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@keyframes logoScrollRTL { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+@keyframes logoScrollLTR { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
+@keyframes logoScrollRTL { from { transform: translateX(-33.333%); } to { transform: translateX(0); } }
 .logo-track-ltr { animation: logoScrollLTR 38s linear infinite; }
 .logo-track-rtl { animation: logoScrollRTL 38s linear infinite; }
 .logo-item {
-  display: inline-flex; flex-direction: column;
-  align-items: center; gap: 7px;
-  padding: 0 38px;
-  flex-shrink: 0; cursor: default;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 44px;
+  flex-shrink: 0;
 }
 .logo-img {
-  width: 38px; height: 38px;
+  width: 44px; height: 44px;
   object-fit: contain; display: block;
-  filter: grayscale(1) opacity(0.22);
-  transition: filter 0.28s ease, transform 0.28s ease;
-}
-.logo-label {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 0.68rem;
-  text-transform: uppercase; letter-spacing: 1.2px;
-  color: rgba(255,255,255,0.15);
-  transition: color 0.28s ease;
+  transition: transform 0.28s ease, opacity 0.28s ease;
+  opacity: 0.85;
 }
 .logo-item:hover .logo-img {
-  filter: none;
-  transform: scale(1.22);
+  transform: scale(1.25);
+  opacity: 1;
 }
-.logo-item:hover .logo-label { color: rgba(255,255,255,0.85); }
 
 .reset-btn {
   align-self: flex-start;
