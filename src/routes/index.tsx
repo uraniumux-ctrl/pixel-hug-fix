@@ -273,10 +273,9 @@ function Index() {
 /* ------------------------------------------------------------------ */
 function ToolbeltPhysics() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef    = useRef<HTMLCanvasElement>(null);
   const pillEls      = useRef<(HTMLDivElement | null)[]>([]);
-  const [key, setKey]       = useState(0);
-  const [ready, setReady]   = useState(false);
+  const [key, setKey]   = useState(0);
+  const [ready, setReady] = useState(false);
 
   /* ResizeObserver — re-init on container width change */
   useEffect(() => {
@@ -307,31 +306,26 @@ function ToolbeltPhysics() {
   useEffect(() => {
     if (!ready) return;
     const container = containerRef.current;
-    const canvas    = canvasRef.current;
-    if (!container || !canvas) return;
+    if (!container) return;
 
     const W = container.clientWidth;
     const H = container.clientHeight;
-    canvas.width  = W;
-    canvas.height = H;
 
     const engine = Matter.Engine.create({ gravity: { y: 2.2 } });
-    const render  = Matter.Render.create({
-      canvas, engine,
-      options: { width: W, height: H, wireframes: false, background: "transparent" },
-    });
 
+    /* Static walls: floor + left + right */
     const invis = { isStatic: true, render: { visible: false } };
     Matter.Composite.add(engine.world, [
-      Matter.Bodies.rectangle(W / 2, H + 25, W * 2, 50, invis),
-      Matter.Bodies.rectangle(-25,   H / 2,  50, H * 2, invis),
-      Matter.Bodies.rectangle(W + 25, H / 2, 50, H * 2, invis),
+      Matter.Bodies.rectangle(W / 2, H + 25,  W * 2, 50,    invis),
+      Matter.Bodies.rectangle(-25,   H / 2,   50,    H * 2, invis),
+      Matter.Bodies.rectangle(W + 25, H / 2,  50,    H * 2, invis),
     ]);
 
+    /* Create a physics body for every pill, grouped in rows above the container */
     const PH = 38;
     const bodies = pillEls.current.map((el, i) => {
       if (!el) return null;
-      const PW   = el.offsetWidth || 90;
+      const PW  = el.offsetWidth || 90;
       const cols = W < 400 ? 3 : 4;
       const col  = i % cols;
       const row  = Math.floor(i / cols);
@@ -348,6 +342,7 @@ function ToolbeltPhysics() {
 
     Matter.Composite.add(engine.world, bodies);
 
+    /* Sync DOM pill positions to physics bodies every frame */
     let raf: number;
     const sync = () => {
       pillEls.current.forEach((el, i) => {
@@ -361,24 +356,32 @@ function ToolbeltPhysics() {
     };
     sync();
 
-    const mouse = Matter.Mouse.create(canvas);
-    const mc    = Matter.MouseConstraint.create(engine, {
+    /* ── Mouse / touch drag ──
+       Attach directly to the container div so coordinate systems match perfectly.
+       Pill elements have pointer-events:none so all events fall through to the container. */
+    const mouse = Matter.Mouse.create(container);
+
+    /* Prevent the constraint from hijacking page scroll */
+    const mw = (mouse as unknown as { mousewheel: EventListener }).mousewheel;
+    container.removeEventListener("wheel",         mw);
+    container.removeEventListener("mousewheel",    mw);
+    container.removeEventListener("DOMMouseScroll", mw);
+
+    const mc = Matter.MouseConstraint.create(engine, {
       mouse,
-      constraint: { stiffness: 0.25, render: { visible: false } },
+      constraint: { stiffness: 0.3, damping: 0.1, render: { visible: false } },
     });
     Matter.Composite.add(engine.world, mc);
-    (mouse as unknown as { element: HTMLElement }).element.removeEventListener(
-      "wheel",
-      (mouse as unknown as { mousewheel: EventListener }).mousewheel,
-    );
 
-    Matter.Render.run(render);
+    /* Cursor feedback */
+    Matter.Events.on(mc, "startdrag", () => { container.style.cursor = "grabbing"; });
+    Matter.Events.on(mc, "enddrag",   () => { container.style.cursor = "grab"; });
+
     const runner = Matter.Runner.create();
     Matter.Runner.run(runner, engine);
 
     return () => {
       cancelAnimationFrame(raf);
-      Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.Composite.clear(engine.world, false);
       Matter.Engine.clear(engine);
@@ -388,8 +391,6 @@ function ToolbeltPhysics() {
   return (
     <div className="toolbelt-physics-wrap">
       <div ref={containerRef} className="toolbelt-canvas-container">
-        {/* Transparent canvas sits on top to capture mouse for drag */}
-        <canvas ref={canvasRef} className="toolbelt-canvas-overlay" />
         {PILLS.map((pill, i) => (
           <div
             key={`${key}-${pill.slug}`}
@@ -657,14 +658,12 @@ const CSS = `
   height: 370px;
   overflow: hidden;
   position: relative;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
 }
-/* transparent canvas overlay captures mouse for Matter.js drag */
-.toolbelt-canvas-overlay {
-  position: absolute; inset: 0; z-index: 10;
-  cursor: grab; pointer-events: auto;
-  background: transparent;
-}
-.toolbelt-canvas-overlay:active { cursor: grabbing; }
+.toolbelt-canvas-container:active { cursor: grabbing; }
 /* DOM pill elements synced to physics bodies via RAF */
 .dom-pill {
   position: absolute; left: 0; top: 0;
