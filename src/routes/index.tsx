@@ -36,34 +36,67 @@ export const Route = createFileRoute("/")({
 });
 
 const PILLS = [
-  { label: "React",       color: "#61DAFB", text: "#000" },
-  { label: "TypeScript",  color: "#3178C6", text: "#fff" },
-  { label: "Node.js",     color: "#3eff8b", text: "#000" },
-  { label: "WebGL",       color: "#ff65c3", text: "#fff" },
-  { label: "Three.js",    color: "#ffca3a", text: "#000" },
-  { label: "GSAP",        color: "#88CE02", text: "#000" },
-  { label: "Rust",        color: "#CE422B", text: "#fff" },
-  { label: "Figma",       color: "#F24E1E", text: "#fff" },
-  { label: "Google",      color: "#4285F4", text: "#fff" },
-  { label: "Meta",        color: "#0081FB", text: "#fff" },
-  { label: "Apple",       color: "#888888", text: "#fff" },
-  { label: "Microsoft",   color: "#00A4EF", text: "#fff" },
-  { label: "AWS",         color: "#FF9900", text: "#000" },
-  { label: "OpenAI",      color: "#10A37F", text: "#fff" },
-  { label: "Replit",      color: "#F26207", text: "#fff" },
-  { label: "Discord",     color: "#5865F2", text: "#fff" },
-  { label: "Next.js",     color: "#e2e2e2", text: "#000" },
-  { label: "Tailwind",    color: "#06B6D4", text: "#fff" },
-  { label: "PostgreSQL",  color: "#336791", text: "#fff" },
-  { label: "Docker",      color: "#2496ED", text: "#fff" },
-  { label: "Vercel",      color: "#f0f0f0", text: "#000" },
-  { label: "Supabase",    color: "#3ECF8E", text: "#000" },
-  { label: "GitHub",      color: "#1F2937", text: "#fff" },
-  { label: "Stripe",      color: "#635BFF", text: "#fff" },
-  { label: "Netlify",     color: "#00C7B7", text: "#000" },
-  { label: "Redis",       color: "#DC382D", text: "#fff" },
-  { label: "GraphQL",     color: "#E10098", text: "#fff" },
-  { label: "Cloudflare",  color: "#F38020", text: "#fff" },
+  { label: "React",       color: "#61DAFB", text: "#000", slug: "react"        },
+  { label: "TypeScript",  color: "#3178C6", text: "#fff", slug: "typescript"   },
+  { label: "Node.js",     color: "#3eff8b", text: "#000", slug: "nodedotjs"    },
+  { label: "WebGL",       color: "#ff65c3", text: "#fff", slug: "webgl"        },
+  { label: "Three.js",    color: "#ffca3a", text: "#000", slug: "threedotjs"   },
+  { label: "GSAP",        color: "#88CE02", text: "#000", slug: "greensock"    },
+  { label: "Rust",        color: "#CE422B", text: "#fff", slug: "rust"         },
+  { label: "Figma",       color: "#F24E1E", text: "#fff", slug: "figma"        },
+  { label: "Google",      color: "#4285F4", text: "#fff", slug: "google"       },
+  { label: "Meta",        color: "#0081FB", text: "#fff", slug: "meta"         },
+  { label: "Apple",       color: "#555555", text: "#fff", slug: "apple"        },
+  { label: "Microsoft",   color: "#00A4EF", text: "#fff", slug: "microsoft"    },
+  { label: "AWS",         color: "#FF9900", text: "#000", slug: "amazonaws"    },
+  { label: "OpenAI",      color: "#10A37F", text: "#fff", slug: "openai"       },
+  { label: "Replit",      color: "#F26207", text: "#fff", slug: "replit"       },
+  { label: "Discord",     color: "#5865F2", text: "#fff", slug: "discord"      },
+  { label: "Next.js",     color: "#e2e2e2", text: "#000", slug: "nextdotjs"    },
+  { label: "Tailwind",    color: "#06B6D4", text: "#fff", slug: "tailwindcss"  },
+  { label: "PostgreSQL",  color: "#336791", text: "#fff", slug: "postgresql"   },
+  { label: "Docker",      color: "#2496ED", text: "#fff", slug: "docker"       },
+  { label: "Vercel",      color: "#e8e8e8", text: "#000", slug: "vercel"       },
+  { label: "Supabase",    color: "#3ECF8E", text: "#000", slug: "supabase"     },
+  { label: "GitHub",      color: "#2d333b", text: "#fff", slug: "github"       },
+  { label: "Stripe",      color: "#635BFF", text: "#fff", slug: "stripe"       },
+  { label: "Redis",       color: "#DC382D", text: "#fff", slug: "redis"        },
+  { label: "GraphQL",     color: "#E10098", text: "#fff", slug: "graphql"      },
+  { label: "Cloudflare",  color: "#F38020", text: "#fff", slug: "cloudflare"   },
+];
+
+const LOGO_ROW1 = [
+  { name: "Replit",     slug: "replit"     },
+  { name: "GitHub",     slug: "github"     },
+  { name: "Google",     slug: "google"     },
+  { name: "Kali Linux", slug: "kalilinux"  },
+  { name: "Microsoft",  slug: "microsoft"  },
+  { name: "Meta",       slug: "meta"       },
+  { name: "Apple",      slug: "apple"      },
+  { name: "AWS",        slug: "amazonaws"  },
+  { name: "OpenAI",     slug: "openai"     },
+  { name: "Discord",    slug: "discord"    },
+  { name: "Vercel",     slug: "vercel"     },
+  { name: "Figma",      slug: "figma"      },
+  { name: "Stripe",     slug: "stripe"     },
+  { name: "Spotify",    slug: "spotify"    },
+];
+
+const LOGO_ROW2 = [
+  { name: "Docker",     slug: "docker"     },
+  { name: "Tailwind",   slug: "tailwindcss"},
+  { name: "PostgreSQL", slug: "postgresql" },
+  { name: "Redis",      slug: "redis"      },
+  { name: "Cloudflare", slug: "cloudflare" },
+  { name: "Next.js",    slug: "nextdotjs"  },
+  { name: "GraphQL",    slug: "graphql"    },
+  { name: "Netflix",    slug: "netflix"    },
+  { name: "Notion",     slug: "notion"     },
+  { name: "Linear",     slug: "linear"     },
+  { name: "Supabase",   slug: "supabase"   },
+  { name: "MongoDB",    slug: "mongodb"    },
+  { name: "Firebase",   slug: "firebase"   },
+  { name: "TypeScript", slug: "typescript" },
 ];
 
 function Index() {
@@ -178,6 +211,7 @@ function Index() {
       </main>
 
       <ScrollingBanners />
+      <CompanyLogoStrip />
 
       <footer className="brutal-footer">
         <div className="footer-container">
@@ -233,139 +267,99 @@ function Index() {
 }
 
 /* ------------------------------------------------------------------ */
-/* TOOLBELT PHYSICS                                                     */
-/* Pills fall into the card, stack, and are draggable with the mouse.  */
+/* TOOLBELT PHYSICS — DOM pills synced to Matter.js bodies             */
 /* ------------------------------------------------------------------ */
-function drawRoundedRect(
-  ctx: CanvasRenderingContext2D,
-  cx: number, cy: number,
-  w: number, h: number,
-  r: number, angle: number,
-  fill: string, stroke: string,
-) {
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(angle);
-  const x = -w / 2, y = -h / 2;
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.arcTo(x + w, y, x + w, y + r, r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
-  ctx.lineTo(x + r, y + h);
-  ctx.arcTo(x, y + h, x, y + h - r, r);
-  ctx.lineTo(x, y + r);
-  ctx.arcTo(x, y, x + r, y, r);
-  ctx.closePath();
-  ctx.fillStyle = fill;
-  ctx.fill();
-  ctx.strokeStyle = stroke;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.restore();
-}
-
 function ToolbeltPhysics() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [key, setKey] = useState(0);
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const pillEls      = useRef<(HTMLDivElement | null)[]>([]);
+  const [key, setKey]       = useState(0);
+  const [ready, setReady]   = useState(false);
 
+  /* ResizeObserver — re-init on container width change */
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    let lastW = container.clientWidth;
+    const el = containerRef.current;
+    if (!el) return;
+    let lastW = el.clientWidth;
     const ro = new ResizeObserver(() => {
-      const newW = container.clientWidth;
-      if (Math.abs(newW - lastW) > 20) {
-        lastW = newW;
+      if (Math.abs(el.clientWidth - lastW) > 20) {
+        lastW = el.clientWidth;
         setKey((k) => k + 1);
       }
     });
-    ro.observe(container);
+    ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
+  /* Phase 1: wait two frames after key change so pills are measured */
   useEffect(() => {
+    setReady(false);
+    let id1: number, id2: number;
+    id1 = requestAnimationFrame(() => {
+      id2 = requestAnimationFrame(() => setReady(true));
+    });
+    return () => { cancelAnimationFrame(id1); cancelAnimationFrame(id2); };
+  }, [key]);
+
+  /* Phase 2: init physics once pill DOM elements have measured sizes */
+  useEffect(() => {
+    if (!ready) return;
     const container = containerRef.current;
-    const canvas = canvasRef.current;
+    const canvas    = canvasRef.current;
     if (!container || !canvas) return;
 
     const W = container.clientWidth;
     const H = container.clientHeight;
-    const dpr = Math.min(window.devicePixelRatio, 2);
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = W + "px";
-    canvas.style.height = H + "px";
+    canvas.width  = W;
+    canvas.height = H;
 
-    const engine = Matter.Engine.create({ gravity: { y: 1.4 } });
-
-    const render = Matter.Render.create({
-      canvas,
-      engine,
-      options: {
-        width: W * dpr,
-        height: H * dpr,
-        wireframes: false,
-        background: "transparent",
-        pixelRatio: 1,
-      },
+    const engine = Matter.Engine.create({ gravity: { y: 1.5 } });
+    const render  = Matter.Render.create({
+      canvas, engine,
+      options: { width: W, height: H, wireframes: false, background: "transparent" },
     });
 
-    const invisible = { isStatic: true, render: { visible: false } };
+    const invis = { isStatic: true, render: { visible: false } };
     Matter.Composite.add(engine.world, [
-      Matter.Bodies.rectangle(W / 2, H + 25, W * 2, 50, invisible),
-      Matter.Bodies.rectangle(-25, H / 2, 50, H * 2, invisible),
-      Matter.Bodies.rectangle(W + 25, H / 2, 50, H * 2, invisible),
+      Matter.Bodies.rectangle(W / 2, H + 25, W * 2, 50, invis),
+      Matter.Bodies.rectangle(-25,   H / 2,  50, H * 2, invis),
+      Matter.Bodies.rectangle(W + 25, H / 2, 50, H * 2, invis),
     ]);
 
-    const PH = 36;
-    const RADIUS = 18;
-    const tmpCtx = canvas.getContext("2d")!;
-    tmpCtx.font = `bold 13px Syne, sans-serif`;
-
-    const bodies = PILLS.map((pill, i) => {
-      const tw = tmpCtx.measureText(pill.label).width;
-      const PW = Math.ceil(tw + 36);
-      const col = i % 4;
-      const startX = (col + 0.5) * (W / 4) + (Math.random() - 0.5) * 20;
-      const startY = -PH * 1.5 - i * 32;
-      const body = Matter.Bodies.rectangle(startX, startY, PW, PH, {
+    const PH = 38;
+    const bodies = pillEls.current.map((el, i) => {
+      if (!el) return null;
+      const PW   = el.offsetWidth || 90;
+      const cols = W < 400 ? 3 : 4;
+      const col  = i % cols;
+      const startX = (col + 0.5) * (W / cols) + (Math.random() - 0.5) * 18;
+      const startY = -PH - i * 34;
+      return Matter.Bodies.rectangle(startX, startY, PW, PH, {
         restitution: 0.25,
-        friction: 0.55,
-        frictionAir: 0.015,
-        chamfer: { radius: RADIUS },
-        render: { visible: false },
+        friction:    0.55,
+        frictionAir: 0.018,
+        chamfer:     { radius: PH / 2 },
+        render:      { visible: false },
       });
-      return { body, pill, PW };
-    });
+    }).filter(Boolean) as Matter.Body[];
 
-    Matter.Composite.add(engine.world, bodies.map((b) => b.body));
+    Matter.Composite.add(engine.world, bodies);
 
-    Matter.Events.on(render, "afterRender", () => {
-      const ctx2 = render.context;
-      ctx2.save();
-      ctx2.scale(dpr, dpr);
-      bodies.forEach(({ body, pill, PW }) => {
+    let raf: number;
+    const sync = () => {
+      pillEls.current.forEach((el, i) => {
+        const body = bodies[i];
+        if (!el || !body) return;
         const { x, y } = body.position;
-        drawRoundedRect(ctx2, x, y, PW, PH, RADIUS, body.angle, pill.color, "rgba(0,0,0,0.35)");
-        ctx2.save();
-        ctx2.translate(x, y);
-        ctx2.rotate(body.angle);
-        ctx2.fillStyle = pill.text;
-        ctx2.font = "bold 13px Syne, sans-serif";
-        ctx2.textAlign = "center";
-        ctx2.textBaseline = "middle";
-        ctx2.fillText(pill.label, 0, 1);
-        ctx2.restore();
+        const deg = (body.angle * 180) / Math.PI;
+        el.style.transform = `translate(${x - el.offsetWidth / 2}px,${y - PH / 2}px) rotate(${deg}deg)`;
       });
-      ctx2.restore();
-    });
+      raf = requestAnimationFrame(sync);
+    };
+    sync();
 
     const mouse = Matter.Mouse.create(canvas);
-    mouse.pixelRatio = dpr;
-    const mc = Matter.MouseConstraint.create(engine, {
+    const mc    = Matter.MouseConstraint.create(engine, {
       mouse,
       constraint: { stiffness: 0.25, render: { visible: false } },
     });
@@ -380,22 +374,89 @@ function ToolbeltPhysics() {
     Matter.Runner.run(runner, engine);
 
     return () => {
+      cancelAnimationFrame(raf);
       Matter.Render.stop(render);
       Matter.Runner.stop(runner);
       Matter.Composite.clear(engine.world, false);
       Matter.Engine.clear(engine);
     };
-  }, [key]);
+  }, [ready]);
 
   return (
     <div className="toolbelt-physics-wrap">
       <div ref={containerRef} className="toolbelt-canvas-container">
-        <canvas ref={canvasRef} />
+        {/* Transparent canvas sits on top to capture mouse for drag */}
+        <canvas ref={canvasRef} className="toolbelt-canvas-overlay" />
+        {PILLS.map((pill, i) => (
+          <div
+            key={`${key}-${pill.slug}`}
+            ref={(el) => { pillEls.current[i] = el; }}
+            className="dom-pill"
+            style={{
+              background: pill.color,
+              color:      pill.text,
+              opacity:    ready ? 1 : 0,
+            }}
+          >
+            <img
+              src={`https://cdn.simpleicons.org/${pill.slug}/${pill.text === "#000" ? "000000" : "ffffff"}`}
+              width={15} height={15} alt=""
+              draggable={false}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+            <span>{pill.label}</span>
+          </div>
+        ))}
       </div>
       <button className="reset-btn" onClick={() => setKey((k) => k + 1)}>
         <RefreshCw size={14} strokeWidth={3} /> Reset
       </button>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* COMPANY LOGO STRIP                                                   */
+/* B&W by default → full color + scale on hover                        */
+/* ------------------------------------------------------------------ */
+function CompanyLogoStrip() {
+  const row1 = [...LOGO_ROW1, ...LOGO_ROW1];
+  const row2 = [...LOGO_ROW2, ...LOGO_ROW2];
+  return (
+    <section className="logo-strip-section">
+      <div className="logo-strip-row">
+        <div className="logo-strip-track logo-track-ltr">
+          {row1.map((logo, i) => (
+            <div key={i} className="logo-item">
+              <img
+                src={`https://cdn.simpleicons.org/${logo.slug}`}
+                alt={logo.name}
+                className="logo-img"
+                draggable={false}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+              />
+              <span className="logo-label">{logo.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="logo-strip-row">
+        <div className="logo-strip-track logo-track-rtl">
+          {row2.map((logo, i) => (
+            <div key={i} className="logo-item">
+              <img
+                src={`https://cdn.simpleicons.org/${logo.slug}`}
+                alt={logo.name}
+                className="logo-img"
+                draggable={false}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+              />
+              <span className="logo-label">{logo.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -579,11 +640,83 @@ const CSS = `
   flex: 1;
   width: calc(100% + 70px);
   margin-left: -35px;
-  height: 360px;
+  height: 370px;
   overflow: hidden;
-  cursor: grab;
+  position: relative;
 }
-.toolbelt-canvas-container:active { cursor: grabbing; }
+/* transparent canvas overlay captures mouse for Matter.js drag */
+.toolbelt-canvas-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  cursor: grab; pointer-events: auto;
+  background: transparent;
+}
+.toolbelt-canvas-overlay:active { cursor: grabbing; }
+/* DOM pill elements synced to physics bodies via RAF */
+.dom-pill {
+  position: absolute; left: 0; top: 0;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 15px;
+  border-radius: 9999px;
+  border: 2.5px solid rgba(0,0,0,0.3);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 13px;
+  white-space: nowrap; user-select: none;
+  pointer-events: none;
+  will-change: transform;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  transition: opacity 0.15s;
+  z-index: 5;
+}
+.dom-pill img { display: block; flex-shrink: 0; }
+
+/* COMPANY LOGO STRIP */
+.logo-strip-section {
+  overflow: hidden;
+  border-top: var(--border-thick);
+  border-bottom: var(--border-thick);
+  background: #09090d;
+  margin-bottom: 0;
+}
+.logo-strip-row {
+  overflow: hidden;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.logo-strip-row:last-child { border-bottom: none; }
+.logo-strip-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+@keyframes logoScrollLTR { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes logoScrollRTL { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.logo-track-ltr { animation: logoScrollLTR 38s linear infinite; }
+.logo-track-rtl { animation: logoScrollRTL 38s linear infinite; }
+.logo-item {
+  display: inline-flex; flex-direction: column;
+  align-items: center; gap: 7px;
+  padding: 0 38px;
+  flex-shrink: 0; cursor: default;
+}
+.logo-img {
+  width: 38px; height: 38px;
+  object-fit: contain; display: block;
+  filter: grayscale(1) opacity(0.22);
+  transition: filter 0.28s ease, transform 0.28s ease;
+}
+.logo-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 0.68rem;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: rgba(255,255,255,0.15);
+  transition: color 0.28s ease;
+}
+.logo-item:hover .logo-img {
+  filter: none;
+  transform: scale(1.22);
+}
+.logo-item:hover .logo-label { color: rgba(255,255,255,0.85); }
+
 .reset-btn {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 7px;
