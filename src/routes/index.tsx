@@ -236,13 +236,55 @@ function Index() {
 /* TOOLBELT PHYSICS                                                     */
 /* Pills fall into the card, stack, and are draggable with the mouse.  */
 /* ------------------------------------------------------------------ */
+function drawRoundedRect(
+  ctx: CanvasRenderingContext2D,
+  cx: number, cy: number,
+  w: number, h: number,
+  r: number, angle: number,
+  fill: string, stroke: string,
+) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+  const x = -w / 2, y = -h / 2;
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+}
+
 function ToolbeltPhysics() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const engineRef = useRef<Matter.Engine | null>(null);
-  const renderRef = useRef<Matter.Render | null>(null);
-  const runnerRef = useRef<Matter.Runner | null>(null);
   const [key, setKey] = useState(0);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    let lastW = container.clientWidth;
+    const ro = new ResizeObserver(() => {
+      const newW = container.clientWidth;
+      if (Math.abs(newW - lastW) > 20) {
+        lastW = newW;
+        setKey((k) => k + 1);
+      }
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -250,50 +292,52 @@ function ToolbeltPhysics() {
     if (!container || !canvas) return;
 
     const W = container.clientWidth;
-    const H = 380;
-    canvas.width = W;
-    canvas.height = H;
+    const H = container.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
 
     const engine = Matter.Engine.create({ gravity: { y: 1.4 } });
-    engineRef.current = engine;
 
     const render = Matter.Render.create({
       canvas,
       engine,
       options: {
-        width: W,
-        height: H,
+        width: W * dpr,
+        height: H * dpr,
         wireframes: false,
         background: "transparent",
-        pixelRatio: Math.min(window.devicePixelRatio, 2),
+        pixelRatio: 1,
       },
     });
-    renderRef.current = render;
 
-    const wallOpts = { isStatic: true, render: { fillStyle: "transparent", strokeStyle: "transparent", lineWidth: 0 } };
+    const invisible = { isStatic: true, render: { visible: false } };
     Matter.Composite.add(engine.world, [
-      Matter.Bodies.rectangle(W / 2, H + 25, W * 2, 50, wallOpts),
-      Matter.Bodies.rectangle(-25, H / 2, 50, H * 2, wallOpts),
-      Matter.Bodies.rectangle(W + 25, H / 2, 50, H * 2, wallOpts),
+      Matter.Bodies.rectangle(W / 2, H + 25, W * 2, 50, invisible),
+      Matter.Bodies.rectangle(-25, H / 2, 50, H * 2, invisible),
+      Matter.Bodies.rectangle(W + 25, H / 2, 50, H * 2, invisible),
     ]);
 
     const PH = 36;
-    const ctx = canvas.getContext("2d")!;
+    const RADIUS = 18;
+    const tmpCtx = canvas.getContext("2d")!;
+    tmpCtx.font = `bold 13px Syne, sans-serif`;
 
     const bodies = PILLS.map((pill, i) => {
-      ctx.font = "bold 13px Syne, sans-serif";
-      const tw = ctx.measureText(pill.label).width;
-      const PW = Math.ceil(tw + 32);
+      const tw = tmpCtx.measureText(pill.label).width;
+      const PW = Math.ceil(tw + 36);
       const col = i % 4;
-      const startX = (col + 0.5) * (W / 4) + (Math.random() - 0.5) * 30;
-      const startY = -PH - i * 28;
+      const startX = (col + 0.5) * (W / 4) + (Math.random() - 0.5) * 20;
+      const startY = -PH * 1.5 - i * 32;
       const body = Matter.Bodies.rectangle(startX, startY, PW, PH, {
-        restitution: 0.3,
-        friction: 0.5,
-        frictionAir: 0.02,
-        render: { fillStyle: pill.color, strokeStyle: "#000", lineWidth: 2 },
+        restitution: 0.25,
+        friction: 0.55,
+        frictionAir: 0.015,
+        chamfer: { radius: RADIUS },
+        render: { visible: false },
       });
-      (body as unknown as { pillIndex: number }).pillIndex = i;
       return { body, pill, PW };
     });
 
@@ -301,23 +345,26 @@ function ToolbeltPhysics() {
 
     Matter.Events.on(render, "afterRender", () => {
       const ctx2 = render.context;
+      ctx2.save();
+      ctx2.scale(dpr, dpr);
       bodies.forEach(({ body, pill, PW }) => {
         const { x, y } = body.position;
-        const angle = body.angle;
+        drawRoundedRect(ctx2, x, y, PW, PH, RADIUS, body.angle, pill.color, "rgba(0,0,0,0.35)");
         ctx2.save();
         ctx2.translate(x, y);
-        ctx2.rotate(angle);
+        ctx2.rotate(body.angle);
         ctx2.fillStyle = pill.text;
         ctx2.font = "bold 13px Syne, sans-serif";
         ctx2.textAlign = "center";
         ctx2.textBaseline = "middle";
         ctx2.fillText(pill.label, 0, 1);
         ctx2.restore();
-        void PW;
       });
+      ctx2.restore();
     });
 
     const mouse = Matter.Mouse.create(canvas);
+    mouse.pixelRatio = dpr;
     const mc = Matter.MouseConstraint.create(engine, {
       mouse,
       constraint: { stiffness: 0.25, render: { visible: false } },
@@ -330,7 +377,6 @@ function ToolbeltPhysics() {
 
     Matter.Render.run(render);
     const runner = Matter.Runner.create();
-    runnerRef.current = runner;
     Matter.Runner.run(runner, engine);
 
     return () => {
@@ -344,13 +390,9 @@ function ToolbeltPhysics() {
   return (
     <div className="toolbelt-physics-wrap">
       <div ref={containerRef} className="toolbelt-canvas-container">
-        <canvas ref={canvasRef} className="toolbelt-canvas" />
+        <canvas ref={canvasRef} />
       </div>
-      <button
-        className="reset-btn"
-        onClick={() => setKey((k) => k + 1)}
-        title="Reset"
-      >
+      <button className="reset-btn" onClick={() => setKey((k) => k + 1)}>
         <RefreshCw size={14} strokeWidth={3} /> Reset
       </button>
     </div>
@@ -440,9 +482,14 @@ const CSS = `
 }
 
 .brutal-header {
-  padding: 25px;
+  padding: 18px 20px;
   display: flex; justify-content: space-between; align-items: center;
   max-width: 1300px; margin: 0 auto;
+}
+@media (max-width: 480px) {
+  .brutal-header { padding: 14px 16px; }
+  .brutal-logo { font-size: .9rem; padding: 8px 14px; }
+  .lang-badge { padding: 6px 12px; font-size: .82rem; }
 }
 .brutal-logo {
   background: var(--primary); color: #000;
@@ -479,6 +526,7 @@ const CSS = `
 }
 .card-tag {
   display: inline-flex; align-items: center; gap: 8px;
+  align-self: flex-start;
   background: var(--accent); color: #000;
   padding: 6px 14px; border: 2px solid #000; border-radius: 12px;
   font-weight: 800; font-size: .8rem; margin-bottom: 20px;
@@ -522,16 +570,20 @@ const CSS = `
 .contact-button svg { color: var(--secondary); }
 
 /* TOOLBELT PHYSICS */
-.stack-card { padding-bottom: 20px; }
-.toolbelt-physics-wrap { display: flex; flex-direction: column; gap: 10px; }
+.stack-card {
+  padding-bottom: 20px;
+  display: flex; flex-direction: column;
+}
+.toolbelt-physics-wrap { display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .toolbelt-canvas-container {
-  width: 100%; height: 380px;
-  border: var(--border-thick); border-radius: 18px;
-  overflow: hidden; background: #0d0e12;
+  flex: 1;
+  width: calc(100% + 70px);
+  margin-left: -35px;
+  height: 360px;
+  overflow: hidden;
   cursor: grab;
 }
 .toolbelt-canvas-container:active { cursor: grabbing; }
-.toolbelt-canvas { display: block; width: 100%; height: 100%; }
 .reset-btn {
   align-self: flex-start;
   display: inline-flex; align-items: center; gap: 7px;
